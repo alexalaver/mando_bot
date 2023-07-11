@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 bot = Bot(cfg.token)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = Data('localhost', '5432', 'mando_test', 'mando_user', 'mando_pwd')
+db = Data('192.168.2.20', '5432', 'mando_data', 'mando_user', 'mando443322')
 
 class register_column(StatesGroup):
     text = State()
