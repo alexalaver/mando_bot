@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 bot = Bot(cfg.token)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = Data('192.168.2.20', '5432', 'mando_data', 'mando_user', 'mando443322')
+db = Data('95.216.65.93', '14369', 'mando_data', 'mando_user', 'mando443322')
 
 class register_column(StatesGroup):
     text = State()
@@ -26,31 +26,28 @@ class register_column_text(StatesGroup):
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    try:
-        if message.chat.type == types.ChatType.PRIVATE:
-            user_id = message.from_user.id
-            user_first_name = message.from_user.first_name
-            user_username = message.from_user.username
-            if(not db.get_user(user_id)):
-                db.add_user(user_id, user_first_name, user_username)
-            if db.get_lang(user_id) == 0:
-                await message.delete()
-                markup = types.InlineKeyboardMarkup(row_width=2)
-                button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
-                button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
-                button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
-                markup.add(button1, button2, button3)
-                await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
-            else:
-                await message.delete()
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-                markup.add(button2, button1)
-                text = db.get_texts(user_id, 'greetings')
-                await message.answer(text.replace("\\n", "\n"), reply_markup=markup)
-    except Exception as ex_:
-        await bot.send_message(chat_id=975041364, text=f"[ERROR] {ex_}")
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        user_first_name = message.from_user.first_name
+        user_username = message.from_user.username
+        if(not db.get_user(user_id)):
+            db.add_user(user_id, user_first_name, user_username)
+        if db.get_lang(user_id) == 0:
+            await message.delete()
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+            button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+            button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+            markup.add(button1, button2, button3)
+            await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+        else:
+            await message.delete()
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+            markup.add(button2, button1)
+            text = db.get_texts(user_id, 'greetings')
+            await message.answer(text.replace("\\n", "\n"), reply_markup=markup)
 
 
 
@@ -192,18 +189,15 @@ async def del_column_text(message: types.Message, state: FSMContext):
 
 @dp.message_handler(commands=['add_column'])
 async def add_column(message: types.Message):
-    try:
-        if message.chat.type == types.ChatType.PRIVATE:
-            user_id = message.from_user.id
-            if db.get_lvl(user_id) > 0:
-                if db.get_lang(user_id) > 0:
-                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    button1 = types.KeyboardButton(db.get_texts(user_id, 'cancel_operations'))
-                    markup.add(button1)
-                    await message.answer(db.get_texts(user_id, 'name_column'), reply_markup=markup)
-                    await register_column.text.set()
-    except Exception as ex_:
-        await bot.send_message(chat_id=975041364, text=f"[ERROR] {ex_}")
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        if db.get_lvl(user_id) > 0:
+            if db.get_lang(user_id) > 0:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'cancel_operations'))
+                markup.add(button1)
+                await message.answer(db.get_texts(user_id, 'name_column'), reply_markup=markup)
+                await register_column.text.set()
 
 @dp.message_handler(commands=['del_column'])
 async def del_column(message: types.Message):
@@ -283,34 +277,31 @@ async def language(callback_query: types.CallbackQuery):
 
 @dp.message_handler()
 async def change_language(message: types.Message):
-    try:
-        if message.chat.type == types.ChatType.PRIVATE:
-            user_id = message.from_user.id
-            settings = db.get_texts(user_id, 'settings')
-            change_lang = db.get_texts(user_id, 'change_language')
-            back = db.get_texts(user_id, 'back')
-            if db.get_lang(user_id) > 0:
-                if message.text == settings:
-                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    button1 = types.KeyboardButton(change_lang)
-                    button2 = types.KeyboardButton(back)
-                    markup.add(button1, button2)
-                    await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup)
-                elif message.text == change_lang:
-                    markup = types.InlineKeyboardMarkup(row_width=2)
-                    button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenians')
-                    button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russians')
-                    button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
-                    markup.add(button1, button2, button3)
-                    await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup)
-                elif message.text == back:
-                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                    button1 = types.KeyboardButton(settings)
-                    button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-                    markup.add(button2, button1)
-                    await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
-    except Exception as ex_:
-        await bot.send_message(chat_id=975041364, text=f"[ERROR] {ex_}")
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        settings = db.get_texts(user_id, 'settings')
+        change_lang = db.get_texts(user_id, 'change_language')
+        back = db.get_texts(user_id, 'back')
+        if db.get_lang(user_id) > 0:
+            if message.text == settings:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                button1 = types.KeyboardButton(change_lang)
+                button2 = types.KeyboardButton(back)
+                markup.add(button1, button2)
+                await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup)
+            elif message.text == change_lang:
+                markup = types.InlineKeyboardMarkup(row_width=2)
+                button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenians')
+                button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russians')
+                button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
+                markup.add(button1, button2, button3)
+                await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup)
+            elif message.text == back:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+                button1 = types.KeyboardButton(settings)
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
