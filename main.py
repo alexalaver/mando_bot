@@ -49,6 +49,27 @@ async def start(message: types.Message):
             text = db.get_texts(user_id, 'greetings')
             await message.answer(text.replace("\\n", "\n"), reply_markup=markup)
 
+@dp.message_handler(commands='start')
+async def settings_command(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        if db.get_lang(user_id) > 0:
+            change_lang = db.get_texts(user_id, 'change_language')
+            back = db.get_texts(user_id, 'back')
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(change_lang)
+            button2 = types.KeyboardButton(back)
+            markup.add(button1, button2)
+            await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup)
+        else:
+            await message.delete()
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+            button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+            button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+            markup.add(button1, button2, button3)
+            await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+
 
 
 @dp.message_handler(state=register_column.text)
