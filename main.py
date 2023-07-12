@@ -98,7 +98,7 @@ async def reg_column(message: types.Message, state: FSMContext):
 async def reg_column_name(message: types.Message, state: FSMContext):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
         button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
         button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
@@ -138,7 +138,7 @@ async def reg_column_col_text(message: types.Message, state: FSMContext):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         user_text = message.text
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
         button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
         button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
@@ -158,7 +158,7 @@ async def reg_column_col_lang(message: types.Message, state: FSMContext):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         user_text = message.text
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
         button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
         button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
@@ -189,7 +189,7 @@ async def reg_column_col_lang(message: types.Message, state: FSMContext):
 async def del_column_text(message: types.Message, state: FSMContext):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
         button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
         button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
@@ -270,47 +270,33 @@ async def add_column_options(message: types.Message):
 async def language(callback_query: types.CallbackQuery):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         user_id = callback_query.from_user.id
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+        button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+        button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
+        markup.add(button2, button3, button1)
         if callback_query.data == 'armenian':
             db.set_lang(user_id, 1)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'russian':
             db.set_lang(user_id, 2)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'english':
             db.set_lang(user_id, 3)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'armenians':
             db.set_lang(user_id, 1)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
         elif callback_query.data == 'russians':
             db.set_lang(user_id, 2)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
         elif callback_query.data == 'englishs':
             db.set_lang(user_id, 3)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
 
@@ -319,7 +305,7 @@ async def other(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         if db.get_lang(user_id) > 0:
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
             button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
