@@ -288,10 +288,10 @@ async def language(callback_query: types.CallbackQuery):
 async def other(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
-        settings = db.get_texts(user_id, 'settings')
-        change_lang = db.get_texts(user_id, 'change_language')
-        back = db.get_texts(user_id, 'back')
         if db.get_lang(user_id) > 0:
+            settings = db.get_texts(user_id, 'settings')
+            change_lang = db.get_texts(user_id, 'change_language')
+            back = db.get_texts(user_id, 'back')
             if message.text == settings:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
                 button1 = types.KeyboardButton(change_lang)
