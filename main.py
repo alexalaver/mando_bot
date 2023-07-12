@@ -199,7 +199,13 @@ async def add_column(message: types.Message):
                 await message.answer(db.get_texts(user_id, 'name_column'), reply_markup=markup)
                 await register_column.text.set()
             else:
-                await message.answer(db.get_texts(user_id, 'error_lang'))
+                await message.delete()
+                markup = types.InlineKeyboardMarkup(row_width=2)
+                button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+                button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+                button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+                markup.add(button1, button2, button3)
+                await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
 
 @dp.message_handler(commands=['del_column'])
 async def del_column(message: types.Message):
@@ -213,7 +219,13 @@ async def del_column(message: types.Message):
                 await del_column.del_text.set()
                 await message.answer(db.get_texts(user_id, 'reg_column'), reply_markup=markup)
             else:
-                await message.answer(db.get_texts(user_id, 'error_lang'))
+                await message.delete()
+                markup = types.InlineKeyboardMarkup(row_width=2)
+                button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+                button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+                button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+                markup.add(button1, button2, button3)
+                await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
 
 @dp.message_handler(commands=['add_column_options'])
 async def add_column_options(message: types.Message):
@@ -229,7 +241,13 @@ async def add_column_options(message: types.Message):
                 await message.answer(db.get_texts(user_id, 'name_column'), reply_markup=markup)
                 await register_column_text.column_name.set()
             else:
-                await message.answer(db.get_texts(user_id, 'error_lang'))
+                await message.delete()
+                markup = types.InlineKeyboardMarkup(row_width=2)
+                button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+                button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+                button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+                markup.add(button1, button2, button3)
+                await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
 
 
 
@@ -282,7 +300,13 @@ async def language(callback_query: types.CallbackQuery):
                 await callback_query.message.delete()
                 await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
         else:
-            await callback_query.message.answer(db.get_texts(user_id, 'error_lang'))
+            await callback_query.message.delete()
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+            button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+            button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+            markup.add(button1, button2, button3)
+            await callback_query.message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
 
 @dp.message_handler()
 async def other(message: types.Message):
@@ -314,7 +338,13 @@ async def other(message: types.Message):
             elif message.text == db.get_texts(user_id, 'begin'):
                 await message.answer(db.get_texts(user_id, 'greetings'))
         else:
-            await message.answer(db.get_texts(user_id, 'error_lang'))
+            await message.delete()
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenian')
+            button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russian')
+            button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
+            markup.add(button1, button2, button3)
+            await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
