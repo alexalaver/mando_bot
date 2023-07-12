@@ -198,6 +198,8 @@ async def add_column(message: types.Message):
                 markup.add(button1)
                 await message.answer(db.get_texts(user_id, 'name_column'), reply_markup=markup)
                 await register_column.text.set()
+            else:
+                await message.answer(db.get_texts(user_id, 'error_lang'))
 
 @dp.message_handler(commands=['del_column'])
 async def del_column(message: types.Message):
@@ -210,6 +212,8 @@ async def del_column(message: types.Message):
                 markup.add(button1)
                 await del_column.del_text.set()
                 await message.answer(db.get_texts(user_id, 'reg_column'), reply_markup=markup)
+            else:
+                await message.answer(db.get_texts(user_id, 'error_lang'))
 
 @dp.message_handler(commands=['add_column_options'])
 async def add_column_options(message: types.Message):
@@ -224,6 +228,8 @@ async def add_column_options(message: types.Message):
                 db.add_cashe(user_id)
                 await message.answer(db.get_texts(user_id, 'name_column'), reply_markup=markup)
                 await register_column_text.column_name.set()
+            else:
+                await message.answer(db.get_texts(user_id, 'error_lang'))
 
 
 
@@ -231,52 +237,55 @@ async def add_column_options(message: types.Message):
 async def language(callback_query: types.CallbackQuery):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         user_id = callback_query.from_user.id
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-        if callback_query.data == 'armenian':
-            db.set_lang(user_id, 1)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
-            await callback_query.message.delete()
-            await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
-        elif callback_query.data == 'russian':
-            db.set_lang(user_id, 2)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
-            await callback_query.message.delete()
-            await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
-        elif callback_query.data == 'english':
-            db.set_lang(user_id, 3)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
-            await callback_query.message.delete()
-            await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
-        elif callback_query.data == 'armenians':
-            db.set_lang(user_id, 1)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
-            await callback_query.message.delete()
-            await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
-        elif callback_query.data == 'russians':
-            db.set_lang(user_id, 2)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
-            await callback_query.message.delete()
-            await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
-        elif callback_query.data == 'englishs':
-            db.set_lang(user_id, 3)
-            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
-            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
-            markup.add(button2, button1)
-            await callback_query.message.delete()
-            await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+        if db.get_lang(user_id) > 0:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            if callback_query.data == 'armenian':
+                db.set_lang(user_id, 1)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await callback_query.message.delete()
+                await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
+            elif callback_query.data == 'russian':
+                db.set_lang(user_id, 2)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await callback_query.message.delete()
+                await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
+            elif callback_query.data == 'english':
+                db.set_lang(user_id, 3)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await callback_query.message.delete()
+                await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
+            elif callback_query.data == 'armenians':
+                db.set_lang(user_id, 1)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await callback_query.message.delete()
+                await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+            elif callback_query.data == 'russians':
+                db.set_lang(user_id, 2)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await callback_query.message.delete()
+                await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+            elif callback_query.data == 'englishs':
+                db.set_lang(user_id, 3)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+                button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+                markup.add(button2, button1)
+                await callback_query.message.delete()
+                await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+        else:
+            await callback_query.message.answer(db.get_texts(user_id, 'error_lang'))
 
 @dp.message_handler()
-async def change_language(message: types.Message):
+async def other(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         settings = db.get_texts(user_id, 'settings')
@@ -302,6 +311,10 @@ async def change_language(message: types.Message):
                 button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
                 markup.add(button2, button1)
                 await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
+            elif message.text == db.get_texts(user_id, 'begin'):
+                await message.answer(db.get_texts(user_id, 'greetings'))
+        else:
+            await message.answer(db.get_texts(user_id, 'error_lang'))
 
 if __name__ == "__main__":
     executor.start_polling(dp)
