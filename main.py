@@ -49,7 +49,7 @@ async def start(message: types.Message):
             text = db.get_texts(user_id, 'greetings')
             await message.answer(text.replace("\\n", "\n"), reply_markup=markup)
 
-@dp.message_handler(commands='start')
+@dp.message_handler(commands='settings')
 async def settings_command(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
