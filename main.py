@@ -327,7 +327,8 @@ async def other(message: types.Message):
                 markup.add(button2, button1)
                 await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
             elif message.text == db.get_texts(user_id, 'begin'):
-                await message.answer(db.get_texts(user_id, 'greetings'))
+                text = db.get_texts(user_id, 'greetings')
+                await message.answer(text.replace("\\n", "\n"))
         else:
             await message.delete()
             markup = types.InlineKeyboardMarkup(row_width=2)
