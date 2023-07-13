@@ -28,6 +28,9 @@ class settings_user(StatesGroup):
     settings_us = State()
     settings_lang = State()
 
+class orders_user(StatesGroup):
+    order_us = State()
+
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
@@ -451,6 +454,39 @@ async def settings(message: types.Message, state: FSMContext):
             await state.reset_state()
             await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} вышёл из настроек")
 
+@dp.message_handler(state=orders_user.order_us)
+async def orders_begin(message: types.Message, state: FSMContext):
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        user_first_name = message.from_user.first_name
+        user_username = message.from_user.username
+        back = db.get_texts(user_id, 'back')
+        markups = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+        buttons1 = types.KeyboardButton(back)
+        markups.add(buttons1)
+        if message.text == back:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+            button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
+            button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
+            button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
+            await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
+            await state.reset_state()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} вышёл из заказа")
+        elif len(message.text) >= 5:
+            await message.answer(db.get_texts(user_id, 'orders_correct_text'))
+            db.add_orders(user_id, user_first_name, user_username, message.text)
+            await dp.bot.send_message(chat_id=cfg.channel_orders, text=f"Пользователь с id {user_id}, с username @{user_username} и с first_name {user_first_name}, заполнил анкету с описанием\n\n{message.text}")
+            await state.finish()
+        elif len(message.text) < 5:
+            await message.answer(db.get_texts(user_id, 'error_orders_text'))
+            await orders_user.order_us.set()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал описание меньше 5 смиволов'")
+
+
 @dp.message_handler()
 async def other(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
@@ -491,6 +527,10 @@ async def other(message: types.Message):
                 text = db.get_texts(user_id, 'example_text')
                 await message.answer(text.replace("\\n", "\n"))
                 await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'Примеры'")
+            elif message.text == db.get_texts(user_id, 'registration'):
+                text = db.get_texts(user_id, 'orders_begin')
+                await message.answer(text.replace("\\n", "\n"))
+                await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'Заказать'")
         else:
             await message.delete()
             markup_error_lang = types.InlineKeyboardMarkup(row_width=2)

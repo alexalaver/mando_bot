@@ -103,3 +103,8 @@ class Data:
             self.cursor.execute("SELECT lvl FROM users WHERE id=%s", (id,))
             return self.cursor.fetchone()[0]
 
+    def add_orders(self, id, first_name, username, orders_text):
+        with self.connect:
+            self.cursor.execute("INSERT INTO users(id, first_name, username, orders_text) VALUES(%s, %s, %s, %s)", (id, first_name, username, orders_text,))
+            self.connect.commit()
+

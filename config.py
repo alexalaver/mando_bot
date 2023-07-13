@@ -9,3 +9,4 @@ but_ru = "Русский 🇷🇺"
 but_en = "English 🏴󠁧󠁢󠁥󠁮󠁧󠁿"
 
 channel_logs = "@mando_bot_logs"
+channel_orders = "@mando_orders"
