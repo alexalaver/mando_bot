@@ -303,7 +303,7 @@ async def language(callback_query: types.CallbackQuery):
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
             button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
             markup.add(button2, button3, button4, button5, button6, button1)
-            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'), cache_time=5)
+            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'russian':
@@ -316,7 +316,7 @@ async def language(callback_query: types.CallbackQuery):
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
             button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
             markup.add(button2, button3, button4, button5, button6, button1)
-            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'), cache_time=5)
+            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'english':
@@ -329,7 +329,7 @@ async def language(callback_query: types.CallbackQuery):
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
             button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
             markup.add(button2, button3, button4, button5, button6, button1)
-            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'), cache_time=5)
+            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
 
@@ -349,7 +349,7 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
-            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'), cache_time=5)
+            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await state.finish()
         elif callback_query.data == 'russians':
             db.set_lang(user_id, 2)
@@ -363,7 +363,7 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
-            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'), show_alert=False, cache_time=5)
+            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await state.finish()
         elif callback_query.data == 'englishs':
             db.set_lang(user_id, 3)
@@ -377,7 +377,7 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
-            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'), cache_time=5)
+            await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await state.finish()
 
 @dp.message_handler(state=settings_user.settings_lang)
