@@ -53,7 +53,8 @@ async def start(message: types.Message):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             text = db.get_texts(user_id, 'greetings')
             await message.answer(text.replace("\\n", "\n"), reply_markup=markup)
 
@@ -90,7 +91,8 @@ async def reg_column(message: types.Message, state: FSMContext):
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
         button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
         button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-        markup.add(button2, button3, button4, button5, button1)
+        button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+        markup.add(button2, button3, button4, button5, button6, button1)
         if message.text == db.get_texts(user_id, 'cancel_operations'):
             await state.reset_state()
             await message.answer(db.get_texts(user_id, 'cancel_operation_text'), reply_markup=markup)
@@ -113,7 +115,8 @@ async def reg_column_name(message: types.Message, state: FSMContext):
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
         button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
         button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-        markup.add(button2, button3, button4, button5, button1)
+        button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+        markup.add(button2, button3, button4, button5, button6, button1)
         if message.text == db.get_texts(user_id, 'cancel_operations'):
             await state.reset_state()
             await message.answer(db.get_texts(user_id, 'cancel_operation_text'), reply_markup=markup)
@@ -155,7 +158,8 @@ async def reg_column_col_text(message: types.Message, state: FSMContext):
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
         button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
         button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-        markup.add(button2, button3, button4, button5, button1)
+        button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+        markup.add(button2, button3, button4, button5, button6, button1)
         if message.text == db.get_texts(user_id, 'cancel_operations'):
             await state.reset_state()
             await message.answer(db.get_texts(user_id, 'cancel_operation_text'), reply_markup=markup)
@@ -177,7 +181,8 @@ async def reg_column_col_lang(message: types.Message, state: FSMContext):
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
         button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
         button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-        markup.add(button2, button3, button4, button5, button1)
+        button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+        markup.add(button2, button3, button4, button5, button6, button1)
         if message.text == db.get_texts(user_id, 'cancel_operations'):
             await state.reset_state()
             await message.answer(db.get_texts(user_id, 'cancel_operation_text'), reply_markup=markup)
@@ -210,7 +215,8 @@ async def del_column_text(message: types.Message, state: FSMContext):
         button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
         button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
         button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-        markup.add(button2, button3, button4, button5, button1)
+        button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+        markup.add(button2, button3, button4, button5, button6, button1)
         if message.text == db.get_texts(user_id, 'cancel_operations'):
             await state.reset_state()
             await message.answer(db.get_texts(user_id, 'cancel_operation_text'), reply_markup=markup)
@@ -295,7 +301,8 @@ async def language(callback_query: types.CallbackQuery):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'russian':
@@ -306,7 +313,8 @@ async def language(callback_query: types.CallbackQuery):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
         elif callback_query.data == 'english':
@@ -317,7 +325,8 @@ async def language(callback_query: types.CallbackQuery):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
 
@@ -333,7 +342,8 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await state.finish()
@@ -345,7 +355,8 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await state.finish()
@@ -357,13 +368,14 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await state.finish()
 
 @dp.message_handler(state=settings_user.settings_lang)
-async def settings_lang_text(message: types.Message, state: FSMContext):
+async def settings_lang_text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         back = db.get_texts(user_id, 'back')
@@ -401,7 +413,8 @@ async def settings(message: types.Message, state: FSMContext):
             button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
             button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
             button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
-            markup.add(button2, button3, button4, button5, button1)
+            button6 = types.KeyboardButton(db.get_texts(user_id, 'rules'))
+            markup.add(button2, button3, button4, button5, button6, button1)
             await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
             await state.reset_state()
 
@@ -430,6 +443,9 @@ async def other(message: types.Message):
                 await settings_user.settings_us.set()
             elif message.text == db.get_texts(user_id, 'begin'):
                 text = db.get_texts(user_id, 'greetings')
+                await message.answer(text.replace("\\n", "\n"))
+            elif message.text == db.get_texts(user_id, 'rules'):
+                text = db.get_texts(user_id, 'rules_text')
                 await message.answer(text.replace("\\n", "\n"))
         else:
             await message.delete()
