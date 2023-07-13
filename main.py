@@ -45,6 +45,7 @@ async def start(message: types.Message):
             button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
             markup.add(button1, button2, button3)
             await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /start с не выбранным языком")
         else:
             await message.delete()
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -57,11 +58,13 @@ async def start(message: types.Message):
             markup.add(button2, button3, button4, button5, button6, button1)
             text = db.get_texts(user_id, 'greetings')
             await message.answer(text.replace("\\n", "\n"), reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /start")
 
 @dp.message_handler(commands='settings')
 async def settings_command(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         if db.get_lang(user_id) > 0:
             change_lang = db.get_texts(user_id, 'change_language')
             back = db.get_texts(user_id, 'back')
@@ -70,6 +73,7 @@ async def settings_command(message: types.Message):
             button2 = types.KeyboardButton(back)
             markup.add(button1, button2)
             await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /settings")
         else:
             await message.delete()
             markup = types.InlineKeyboardMarkup(row_width=2)
@@ -78,6 +82,7 @@ async def settings_command(message: types.Message):
             button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
             markup.add(button1, button2, button3)
             await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /settings с не выбранным языком")
 
 
 
@@ -229,6 +234,7 @@ async def del_column_text(message: types.Message, state: FSMContext):
 async def add_column(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         if db.get_lvl(user_id) > 0:
             if db.get_lang(user_id) > 0:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
@@ -244,11 +250,14 @@ async def add_column(message: types.Message):
                 button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
                 markup.add(button1, button2, button3)
                 await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+        else:
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /add_column без админки")
 
 @dp.message_handler(commands=['del_column'])
 async def del_column(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         if db.get_lvl(user_id) > 0:
             if db.get_lang(user_id) > 0:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
@@ -264,11 +273,14 @@ async def del_column(message: types.Message):
                 button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
                 markup.add(button1, button2, button3)
                 await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+        else:
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /del_column без админки")
 
 @dp.message_handler(commands=['add_column_options'])
 async def add_column_options(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         if db.get_lvl(user_id) > 0:
             if db.get_lang(user_id) > 0:
                 db.delete_cashe(user_id)
@@ -286,6 +298,8 @@ async def add_column_options(message: types.Message):
                 button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
                 markup.add(button1, button2, button3)
                 await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup)
+        else:
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал /add_column_options без админки")
 
 
 
@@ -293,6 +307,7 @@ async def add_column_options(message: types.Message):
 async def language(callback_query: types.CallbackQuery):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         user_id = callback_query.from_user.id
+        user_username = callback_query.from_user.username
         if callback_query.data == 'armenian':
             db.set_lang(user_id, 1)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -306,6 +321,7 @@ async def language(callback_query: types.CallbackQuery):
             await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} выбрал Армянский язык в начале")
         elif callback_query.data == 'russian':
             db.set_lang(user_id, 2)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -319,6 +335,7 @@ async def language(callback_query: types.CallbackQuery):
             await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} выбрал Русский язык в начале")
         elif callback_query.data == 'english':
             db.set_lang(user_id, 3)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -332,11 +349,13 @@ async def language(callback_query: types.CallbackQuery):
             await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} выбрал Английский язык в начале")
 
 @dp.callback_query_handler(state=settings_user.settings_lang)
 async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         user_id = callback_query.from_user.id
+        user_username = callback_query.from_user.username
         if callback_query.data == 'armenians':
             db.set_lang(user_id, 1)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -351,6 +370,7 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await state.finish()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} выбрал Армянский язык в настройках")
         elif callback_query.data == 'russians':
             db.set_lang(user_id, 2)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -365,6 +385,7 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
             await state.finish()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} выбрал Русский язык в настройках")
         elif callback_query.data == 'englishs':
             db.set_lang(user_id, 3)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -378,12 +399,14 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await callback_query.answer(text=db.get_texts(user_id, 'change_lang_begin'))
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} выбрал Английский язык в настройках")
             await state.finish()
 
 @dp.message_handler(state=settings_user.settings_lang)
 async def settings_lang_text(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         back = db.get_texts(user_id, 'back')
         change_lang = db.get_texts(user_id, 'change_language')
         if message.text == back:
@@ -393,11 +416,13 @@ async def settings_lang_text(message: types.Message):
             markup_settings.add(button1, button2)
             await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup_settings)
             await settings_user.settings_us.set()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} вышёл назад в настройки из смены языка")
 
 @dp.message_handler(state=settings_user.settings_us)
 async def settings(message: types.Message, state: FSMContext):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         change_lang = db.get_texts(user_id, 'change_language')
         back = db.get_texts(user_id, 'back')
         markups = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
@@ -412,6 +437,7 @@ async def settings(message: types.Message, state: FSMContext):
             await message.answer(db.get_texts(user_id, 'correct_button'), reply_markup=markups)
             await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup_inline)
             await settings_user.settings_lang.set()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} зашёл в настройки смены языка")
         elif message.text == back:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
@@ -423,11 +449,13 @@ async def settings(message: types.Message, state: FSMContext):
             markup.add(button2, button3, button4, button5, button6, button1)
             await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
             await state.reset_state()
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} вышёл из настроек")
 
 @dp.message_handler()
 async def other(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
+        user_username = message.from_user.username
         if db.get_lang(user_id) > 0:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
@@ -446,12 +474,23 @@ async def other(message: types.Message):
                 markup_settings.add(button1, button2)
                 await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup_settings)
                 await settings_user.settings_us.set()
+                await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} зашёл в настройки")
             elif message.text == db.get_texts(user_id, 'begin'):
                 text = db.get_texts(user_id, 'greetings')
                 await message.answer(text.replace("\\n", "\n"))
+                await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'Начать'")
             elif message.text == db.get_texts(user_id, 'rules'):
                 text = db.get_texts(user_id, 'rules_text')
                 await message.answer(text.replace("\\n", "\n"))
+                await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'Правила'")
+            elif message.text == db.get_texts(user_id, 'about_us'):
+                text = db.get_texts(user_id, 'about_us_text')
+                await message.answer(text.replace("\\n", "\n"))
+                await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'О нас'")
+            elif message.text == db.get_texts(user_id, 'example'):
+                text = db.get_texts(user_id, 'example_text')
+                await message.answer(text.replace("\\n", "\n"))
+                await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'Примеры'")
         else:
             await message.delete()
             markup_error_lang = types.InlineKeyboardMarkup(row_width=2)
@@ -460,6 +499,7 @@ async def other(message: types.Message):
             button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='english')
             markup_error_lang.add(button1, button2, button3)
             await message.answer(cfg.begin_language_arm + "\n\n" + cfg.begin_language_ru + "\n\n" + cfg.begin_language_en, reply_markup=markup_error_lang)
+            await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} написал сообщение с невыбранным языком")
 
 if __name__ == "__main__":
     executor.start_polling(dp)

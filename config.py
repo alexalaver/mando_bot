@@ -7,3 +7,5 @@ begin_language_en = "English 🏴󠁧󠁢󠁥󠁮󠁧󠁿\nHello, before working
 but_arm = "Հայերեն 🇦🇲"
 but_ru = "Русский 🇷🇺"
 but_en = "English 🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+
+channel_logs = "@mando_bot_logs"
