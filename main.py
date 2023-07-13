@@ -324,8 +324,6 @@ async def language(callback_query: types.CallbackQuery):
 async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
         user_id = callback_query.from_user.id
-        back = db.get_texts(user_id, 'back')
-        change_lang = db.get_texts(user_id, 'change_language')
         if callback_query.data == 'armenians':
             db.set_lang(user_id, 1)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -362,13 +360,19 @@ async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
             await state.finish()
-        elif callback_query.message.text == back:
+
+@dp.message_handler(state=settings_user.settings_lang)
+async def settings_lang_text(message: types.Message, state: FSMContext):
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        back = db.get_texts(user_id, 'back')
+        change_lang = db.get_texts(user_id, 'change_language')
+        if message.text == back:
             markup_settings = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             button1 = types.KeyboardButton(change_lang)
             button2 = types.KeyboardButton(back)
             markup_settings.add(button1, button2)
-            await callback_query.message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup_settings)
-            await callback_query.message.delete()
+            await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup_settings)
             await settings_user.settings_us.set()
 
 @dp.message_handler(state=settings_user.settings_us)
