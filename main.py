@@ -377,7 +377,7 @@ async def settings(message: types.Message, state: FSMContext):
         user_id = message.from_user.id
         change_lang = db.get_texts(user_id, 'change_language')
         back = db.get_texts(user_id, 'back')
-        markups = types.ReplyKeyboardMarkup(row_width=1)
+        markups = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         buttons1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
         markups.add(buttons1)
         if message.text == change_lang:
