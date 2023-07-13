@@ -365,6 +365,7 @@ async def settings(message: types.Message, state: FSMContext):
             button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
             markup_inline.add(button1, button2, button3)
             await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup_inline)
+            await state.finish()
         elif message.text == back:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
