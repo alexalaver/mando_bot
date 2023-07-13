@@ -24,7 +24,7 @@ class register_column_text(StatesGroup):
     column_text = State()
     column_lang = State()
 
-class settings(StatesGroup):
+class settings_user(StatesGroup):
     settings_us = State()
 
 @dp.message_handler(commands='start')
@@ -352,7 +352,7 @@ async def language(callback_query: types.CallbackQuery):
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
 
-@dp.message_handler(state=settings.settings_us)
+@dp.message_handler(state=settings_user.settings_us)
 async def settings(message: types.Message, state: FSMContext):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
