@@ -26,6 +26,7 @@ class register_column_text(StatesGroup):
 
 class settings_user(StatesGroup):
     settings_us = State()
+    settings_lang = State()
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
@@ -318,7 +319,14 @@ async def language(callback_query: types.CallbackQuery):
             markup.add(button2, button3, button4, button5, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'lang_right'), reply_markup=markup)
-        elif callback_query.data == 'armenians':
+
+@dp.callback_query_handler(state=settings_user.settings_lang)
+async def settings_lang(callback_query: types.CallbackQuery, state: FSMContext):
+    if callback_query.message.chat.type == types.ChatType.PRIVATE:
+        user_id = callback_query.from_user.id
+        back = db.get_texts(user_id, 'back')
+        change_lang = db.get_texts(user_id, 'change_language')
+        if callback_query.data == 'armenians':
             db.set_lang(user_id, 1)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
             button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
@@ -329,6 +337,7 @@ async def language(callback_query: types.CallbackQuery):
             markup.add(button2, button3, button4, button5, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+            await state.finish()
         elif callback_query.data == 'russians':
             db.set_lang(user_id, 2)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -340,6 +349,7 @@ async def language(callback_query: types.CallbackQuery):
             markup.add(button2, button3, button4, button5, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+            await state.finish()
         elif callback_query.data == 'englishs':
             db.set_lang(user_id, 3)
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -351,6 +361,15 @@ async def language(callback_query: types.CallbackQuery):
             markup.add(button2, button3, button4, button5, button1)
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
+            await state.finish()
+        elif callback_query.message.text == back:
+            markup_settings = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            button1 = types.KeyboardButton(change_lang)
+            button2 = types.KeyboardButton(back)
+            markup_settings.add(button1, button2)
+            await callback_query.message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup_settings)
+            await callback_query.message.delete()
+            await settings_user.settings_us.set()
 
 @dp.message_handler(state=settings_user.settings_us)
 async def settings(message: types.Message, state: FSMContext):
@@ -358,12 +377,16 @@ async def settings(message: types.Message, state: FSMContext):
         user_id = message.from_user.id
         change_lang = db.get_texts(user_id, 'change_language')
         back = db.get_texts(user_id, 'back')
+        markups = types.InlineKeyboardMarkup(row_width=1)
+        buttons1 = types.ReplyKeyboardMarkup(db.get_texts(user_id, 'settings'))
+        markups.add(buttons1)
         if message.text == change_lang:
             markup_inline = types.InlineKeyboardMarkup(row_width=2)
             button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenians')
             button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russians')
             button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
             markup_inline.add(button1, button2, button3)
+            await message.answer('test', reply_markup=markups)
             await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup_inline)
             await state.finish()
         elif message.text == back:
