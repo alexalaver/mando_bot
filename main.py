@@ -24,6 +24,9 @@ class register_column_text(StatesGroup):
     column_text = State()
     column_lang = State()
 
+class settings(StatesGroup):
+    settings_us = State()
+
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
@@ -349,6 +352,31 @@ async def language(callback_query: types.CallbackQuery):
             await callback_query.message.delete()
             await callback_query.message.answer(db.get_texts(user_id, 'change_lang_begin'), reply_markup=markup)
 
+@dp.message_handler(state=settings.settings_us)
+async def settings(message: types.Message, state: FSMContext):
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        change_lang = db.get_texts(user_id, 'change_language')
+        back = db.get_texts(user_id, 'back')
+        if message.text == change_lang:
+            markup_inline = types.InlineKeyboardMarkup(row_width=2)
+            button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenians')
+            button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russians')
+            button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
+            markup_inline.add(button1, button2, button3)
+            await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup_inline)
+        elif message.text == back:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+            button1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
+            button2 = types.KeyboardButton(db.get_texts(user_id, 'begin'))
+            button3 = types.KeyboardButton(db.get_texts(user_id, 'registration'))
+            button4 = types.KeyboardButton(db.get_texts(user_id, 'example'))
+            button5 = types.KeyboardButton(db.get_texts(user_id, 'about_us'))
+            markup.add(button2, button3, button4, button5, button1)
+            await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
+            await state.reset_state()
+
+
 @dp.message_handler()
 async def other(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
@@ -370,15 +398,7 @@ async def other(message: types.Message):
                 button2 = types.KeyboardButton(back)
                 markup_settings.add(button1, button2)
                 await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup_settings)
-            elif message.text == change_lang:
-                markup_inline = types.InlineKeyboardMarkup(row_width=2)
-                button1 = types.InlineKeyboardButton(cfg.but_arm, callback_data='armenians')
-                button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russians')
-                button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
-                markup_inline.add(button1, button2, button3)
-                await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup_inline)
-            elif message.text == back:
-                await message.answer(db.get_texts(user_id, 'back_text'), reply_markup=markup)
+                await settings.settings_us.set()
             elif message.text == db.get_texts(user_id, 'begin'):
                 text = db.get_texts(user_id, 'greetings')
                 await message.answer(text.replace("\\n", "\n"))
