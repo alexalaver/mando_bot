@@ -399,7 +399,7 @@ async def other(message: types.Message):
                 button2 = types.KeyboardButton(back)
                 markup_settings.add(button1, button2)
                 await message.answer(db.get_texts(user_id, 'setting_text'), reply_markup=markup_settings)
-                await settings.settings_us.set()
+                await settings_user.settings_us.set()
             elif message.text == db.get_texts(user_id, 'begin'):
                 text = db.get_texts(user_id, 'greetings')
                 await message.answer(text.replace("\\n", "\n"))
