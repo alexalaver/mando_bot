@@ -477,7 +477,7 @@ async def orders_begin(message: types.Message, state: FSMContext):
             await state.reset_state()
             await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} вышёл из заказа")
         elif len(message.text) >= 5:
-            await message.answer(db.get_texts(user_id, 'orders_correct_text'))
+            await message.answer(db.get_texts(user_id, 'orders_text_correct'))
             db.add_orders(user_id, user_first_name, user_username, message.text)
             await dp.bot.send_message(chat_id=cfg.channel_orders, text=f"Пользователь с id {user_id}, с username @{user_username} и с first_name {user_first_name}, заполнил анкету с описанием\n\n{message.text}")
             await state.finish()
