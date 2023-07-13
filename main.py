@@ -377,8 +377,8 @@ async def settings(message: types.Message, state: FSMContext):
         user_id = message.from_user.id
         change_lang = db.get_texts(user_id, 'change_language')
         back = db.get_texts(user_id, 'back')
-        markups = types.InlineKeyboardMarkup(row_width=1)
-        buttons1 = types.ReplyKeyboardMarkup(db.get_texts(user_id, 'settings'))
+        markups = types.ReplyKeyboardMarkup(row_width=1)
+        buttons1 = types.KeyboardButton(db.get_texts(user_id, 'settings'))
         markups.add(buttons1)
         if message.text == change_lang:
             markup_inline = types.InlineKeyboardMarkup(row_width=2)
@@ -386,7 +386,7 @@ async def settings(message: types.Message, state: FSMContext):
             button2 = types.InlineKeyboardButton(cfg.but_ru, callback_data='russians')
             button3 = types.InlineKeyboardButton(cfg.but_en, callback_data='englishs')
             markup_inline.add(button1, button2, button3)
-            await message.answer('test', reply_markup=markups)
+            await message.answer('testtest', reply_markup=markups)
             await message.answer(db.get_texts(user_id, 'change_language_text'), reply_markup=markup_inline)
             await settings_user.settings_lang.set()
         elif message.text == back:
