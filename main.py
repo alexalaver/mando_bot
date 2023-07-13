@@ -526,7 +526,7 @@ async def other(message: types.Message):
                 await dp.bot.send_message(chat_id=cfg.channel_logs, text=f"Пользователь с id {user_id} с именем @{user_username} нажал на кнопку/написал 'Примеры'")
             elif message.text == db.get_texts(user_id, 'registration'):
                 markup_settings = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-                button1 = types.KeyboardButton(back)
+                button1 = types.KeyboardButton(db.get_texts(user_id, 'cancel_operations'))
                 markup_settings.add(button1)
                 text = db.get_texts(user_id, 'orders_begin')
                 await message.answer(text.replace("\\n", "\n"), reply_markup=markup_settings)
